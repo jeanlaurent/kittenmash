@@ -6,21 +6,29 @@ import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
 
-public class KittenFaceMash {
-	public String sayHello() {
-		return "hello world";
+public class KittenFaceMash implements Container {
+	private SocketConnection socketConnection;
+	private final int port;
+
+	public KittenFaceMash(int port) {
+		this.port = port;
+	}
+
+	@Override
+	public void handle(Request req, Response resp) {
+		try {
+			resp.getPrintStream().append("hello world").close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
-		new SocketConnection(new Container() {
-			@Override
-			public void handle(Request req, Response resp) {
-				try {
-					resp.getPrintStream().append("hello world").close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}).connect(new InetSocketAddress(8080));
+		new KittenFaceMash(8080).run();
+	}
+
+	public void run() throws IOException {
+		socketConnection = new SocketConnection(this);
+		socketConnection.connect(new InetSocketAddress(port));
 	}
 }
