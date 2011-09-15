@@ -5,6 +5,7 @@ import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
 import static com.google.common.io.Files.*;
 import static java.lang.String.*;
+import static net.gageot.test.Reflection.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
 import org.stringtemplate.v4.ST;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 
@@ -31,15 +33,18 @@ public class KittenFaceMash extends AbstractService implements Container {
 		String action = getFirst(segments, "index");
 
 		try {
+			List<Object> arguments = ImmutableList.builder().add(resp).addAll(skip(segments, 1)).build();
+
+			Object controller;
 			if ("kitten".equals(action)) {
-				new KittenController().render(resp, segments);
+				controller = new KittenController();
 			} else if ("vote".equals(action)) {
-				new VoteController(scores).render(resp, segments);
+				controller = new VoteController(scores);
 			} else {
-				new IndexController(scores).render(resp);
+				controller = new IndexController(scores);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+			invoke(controller, "render", arguments);
 		} finally {
 			try {
 				resp.close();
@@ -72,9 +77,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 			this.scores = scores;
 		}
 
-		public void render(Response resp, List<String> segments) {
-			String kittenId = segments.get(1);
-
+		public void render(Response resp, String kittenId) {
 			scores.win(Integer.parseInt(kittenId));
 
 			resp.add("Location", "/");
@@ -83,8 +86,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 	}
 
 	public final static class KittenController {
-		public void render(Response resp, List<String> segments) throws IOException {
-			String kittenId = segments.get(1);
+		public void render(Response resp, String kittenId) throws IOException {
 			resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
 		}
 	}
