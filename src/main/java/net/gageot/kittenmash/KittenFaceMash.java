@@ -1,10 +1,11 @@
 package net.gageot.kittenmash;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 
 public class KittenFaceMash extends AbstractService implements Container {
@@ -18,9 +19,19 @@ public class KittenFaceMash extends AbstractService implements Container {
 	@Override
 	public void handle(Request req, Response resp) {
 		try {
-			resp.getPrintStream().append("hello world").close();
+			if ("/kitten/1".equals(req.getPath().getPath())) {
+				resp.getOutputStream().write(Files.toByteArray(new File("kitten/1.jpg")));
+			} else {
+				resp.getPrintStream().append("hello world");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				resp.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
