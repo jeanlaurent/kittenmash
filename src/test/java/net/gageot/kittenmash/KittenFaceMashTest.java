@@ -1,38 +1,13 @@
 package net.gageot.kittenmash;
 
-import net.gageot.test.JWebUnitTester;
+import static org.fest.assertions.Assertions.*;
 import org.junit.Test;
 
-public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
+public class KittenFaceMashTest {
 	@Test
-	public void canShowKitten() throws Exception {
-		beginAt("/kitten/1");
+	public void canSayHello() {
+		KittenFaceMash server = new KittenFaceMash();
 
-		assertDownloadedFileEquals("kitten/1.jpg");
-	}
-
-	@Test
-	public void canAnotherKitten() throws Exception {
-		beginAt("/kitten/2");
-
-		assertDownloadedFileEquals("kitten/2.jpg");
-	}
-
-	@Test
-	public void canShowScores() {
-		beginAt("/");
-
-		assertTextInElement("scoreLeft", "Score : 0");
-		assertTextInElement("scoreRight", "Score : 0");
-	}
-
-	@Test
-	public void canVote() {
-		beginAt("/");
-
-		clickLink("voteLeft");
-
-		assertTextInElement("scoreLeft", "Score : 1");
-		assertTextInElement("scoreRight", "Score : 0");
+		assertThat(server.sayHello()).isEqualTo("hello world");
 	}
 }

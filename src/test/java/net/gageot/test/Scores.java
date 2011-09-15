@@ -1,4 +1,4 @@
-package net.gageot.kittenmash;
+package net.gageot.test;
 
 import javax.inject.Singleton;
 
