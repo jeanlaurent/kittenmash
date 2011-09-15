@@ -9,7 +9,7 @@ public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 	public void canSayHello() {
 		beginAt("/");
 
-		assertTextPresent("hello world");
+		assertTextPresent("Kitten FaceMash");
 	}
 
 	@Test
