@@ -25,4 +25,12 @@ public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 
 		assertDownloadedFileEquals("kitten/2.jpg");
 	}
+
+	@Test
+	public void canShowScore() {
+		beginAt("/");
+
+		assertTextInElement("scoreLeft", "Score : 0");
+		assertTextInElement("scoreRight", "Score : 0");
+	}
 }

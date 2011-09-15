@@ -11,6 +11,7 @@ import java.util.List;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+import org.stringtemplate.v4.ST;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 
@@ -33,7 +34,10 @@ public class KittenFaceMash extends AbstractService implements Container {
 				resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
 			} else {
 				String html = Files.toString(new File("index.html"), UTF_8);
-				resp.getPrintStream().append(html);
+				ST template = new ST(html, '$', '$');
+				template.add("scoreLeft", 0);
+				template.add("scoreRight", 0);
+				resp.getPrintStream().append(template.render());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
