@@ -17,4 +17,11 @@ public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 
 		assertDownloadedFileEquals("kitten/01.jpg");
 	}
+
+	@Test
+	public void canAnotherKitten() throws Exception {
+		beginAt("/kitten/02");
+
+		assertDownloadedFileEquals("kitten/02.jpg");
+	}
 }
