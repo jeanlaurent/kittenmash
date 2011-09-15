@@ -8,6 +8,6 @@ public class HelloWorldTest {
 	public void canSayHello() {
 		HelloWorld helloWorld = new HelloWorld();
 
-		assertThat(helloWorld.sayHello()).isEqualTo("");
+		assertThat(helloWorld.sayHello()).isEqualTo("hello world");
 	}
 }
