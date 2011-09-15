@@ -4,11 +4,13 @@ import static com.google.common.base.Charsets.*;
 import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
 import static com.google.common.io.Files.*;
+import static com.google.inject.Guice.*;
 import static java.lang.String.*;
 import static net.gageot.test.Reflection.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.List;
+import javax.inject.Inject;
 import net.gageot.test.Scores;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
@@ -17,14 +19,16 @@ import org.stringtemplate.v4.ST;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.inject.Injector;
 
 public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
 	private final int port;
-	private final Scores scores = new Scores();
+	private final Injector injector;
 
 	public KittenFaceMash(int port) {
 		this.port = port;
+		injector = createInjector();
 	}
 
 	@Override
@@ -37,11 +41,11 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 			Object controller;
 			if ("kitten".equals(action)) {
-				controller = new KittenController();
+				controller = injector.getInstance(KittenController.class);
 			} else if ("vote".equals(action)) {
-				controller = new VoteController(scores);
+				controller = injector.getInstance(VoteController.class);
 			} else {
-				controller = new IndexController(scores);
+				controller = injector.getInstance(IndexController.class);
 			}
 
 			invoke(controller, "render", arguments);
@@ -57,6 +61,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 	public final static class IndexController {
 		private final Scores scores;
 
+		@Inject
 		public IndexController(Scores scores) {
 			this.scores = scores;
 		}
@@ -73,6 +78,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 	public final static class VoteController {
 		private final Scores scores;
 
+		@Inject
 		public VoteController(Scores scores) {
 			this.scores = scores;
 		}
