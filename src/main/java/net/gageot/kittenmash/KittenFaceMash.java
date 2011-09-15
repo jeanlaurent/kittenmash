@@ -1,18 +1,13 @@
 package net.gageot.kittenmash;
 
-import static com.google.common.base.Charsets.*;
 import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
-import static com.google.common.io.Files.*;
-import static java.lang.String.*;
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
-import org.stringtemplate.v4.ST;
-import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 
 public class KittenFaceMash extends AbstractService implements Container {
@@ -31,22 +26,11 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 		try {
 			if ("kitten".equals(action)) {
-				String kittenId = path.get(1);
-				resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
+				new KittenController().render(resp, path);
 			} else if ("vote".equals(action)) {
-				String kittenId = path.get(1);
-
-				scores.win(kittenId);
-
-				resp.setCode(307);
-				resp.add("Location", "/");
+				new VoteController(scores).render(resp, path);
 			} else {
-				String index = Files.toString(new File("index.html"), UTF_8);
-				ST template = new ST(index, '$', '$');
-				template.add("scoreLeft", scores.get("01"));
-				template.add("scoreRight", scores.get("02"));
-
-				resp.getPrintStream().append(template.render());
+				new IndexController(scores).render(resp);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
