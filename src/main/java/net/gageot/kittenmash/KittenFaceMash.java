@@ -2,21 +2,26 @@ package net.gageot.kittenmash;
 
 import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
+import static com.google.inject.Guice.*;
+import static net.gageot.test.Reflection.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.inject.Injector;
 
 public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
 	private final int port;
-	private final Scores scores = new Scores();
+	private final Injector injector;
 
 	public KittenFaceMash(int port) {
 		this.port = port;
+		injector = createInjector();
 	}
 
 	@Override
@@ -25,15 +30,16 @@ public class KittenFaceMash extends AbstractService implements Container {
 		String action = getFirst(path, "index");
 
 		try {
+			Object controller;
 			if ("kitten".equals(action)) {
-				new KittenController().render(resp, path);
+				controller = injector.getInstance(KittenController.class);
 			} else if ("vote".equals(action)) {
-				new VoteController(scores).render(resp, path);
+				controller = injector.getInstance(VoteController.class);
 			} else {
-				new IndexController(scores).render(resp);
+				controller = injector.getInstance(IndexController.class);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+			invoke(controller, "render", ImmutableList.builder().add(resp).addAll(skip(path, 1)).build());
 		} finally {
 			try {
 				resp.close();

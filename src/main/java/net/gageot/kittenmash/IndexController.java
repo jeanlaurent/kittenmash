@@ -2,6 +2,7 @@ package net.gageot.kittenmash;
 
 import static com.google.common.base.Charsets.*;
 import java.io.*;
+import javax.inject.Inject;
 import org.simpleframework.http.Response;
 import org.stringtemplate.v4.ST;
 import com.google.common.io.Files;
@@ -9,6 +10,7 @@ import com.google.common.io.Files;
 public class IndexController {
 	private final Scores scores;
 
+	@Inject
 	public IndexController(Scores scores) {
 		this.scores = scores;
 	}

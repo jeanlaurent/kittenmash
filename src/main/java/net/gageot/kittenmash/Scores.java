@@ -1,5 +1,8 @@
 package net.gageot.kittenmash;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class Scores {
 	private final int[] scores = new int[11];
 
