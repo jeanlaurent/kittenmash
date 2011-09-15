@@ -25,4 +25,14 @@ public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 		assertTextInElement("scoreLeft", "Score : 0");
 		assertTextInElement("scoreRight", "Score : 0");
 	}
+
+	@Test
+	public void canVote() {
+		beginAt("/");
+
+		clickLink("voteLeft");
+
+		assertTextInElement("scoreLeft", "Score : 1");
+		assertTextInElement("scoreRight", "Score : 0");
+	}
 }

@@ -18,6 +18,7 @@ import com.google.common.util.concurrent.AbstractService;
 public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
 	private final int port;
+	private final Scores scores = new Scores();
 
 	public KittenFaceMash(int port) {
 		this.port = port;
@@ -32,11 +33,18 @@ public class KittenFaceMash extends AbstractService implements Container {
 			if ("kitten".equals(action)) {
 				String kittenId = path.get(1);
 				resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
+			} else if ("vote".equals(action)) {
+				String kittenId = path.get(1);
+
+				scores.win(kittenId);
+
+				resp.setCode(307);
+				resp.add("Location", "/");
 			} else {
 				String index = Files.toString(new File("index.html"), UTF_8);
 				ST template = new ST(index, '$', '$');
-				template.add("scoreLeft", 0);
-				template.add("scoreRight", 0);
+				template.add("scoreLeft", scores.get("01"));
+				template.add("scoreRight", scores.get("02"));
 
 				resp.getPrintStream().append(template.render());
 			}
