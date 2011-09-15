@@ -1,18 +1,13 @@
 package net.gageot.kittenmash;
 
-import net.sourceforge.jwebunit.junit.WebTester;
+import net.gageot.test.JWebUnitTester;
 import org.junit.Test;
 
-public class HelloWorldTest {
+public class HelloWorldTest extends JWebUnitTester<HelloWorld> {
 	@Test
 	public void canSayHello() throws Exception {
-		HelloWorld.main(new String[0]);
+		beginAt("/");
 
-		WebTester web = new WebTester();
-		web.setBaseUrl("http://localhost:8080");
-
-		web.beginAt("/");
-
-		web.assertTextPresent("hello world");
+		assertTextPresent("hello world");
 	}
 }
