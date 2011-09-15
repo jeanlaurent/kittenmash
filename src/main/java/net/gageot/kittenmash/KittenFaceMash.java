@@ -1,24 +1,18 @@
 package net.gageot.kittenmash;
 
-import static com.google.common.base.Charsets.*;
 import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
-import static com.google.common.io.Files.*;
 import static com.google.inject.Guice.*;
 import static com.google.inject.name.Names.*;
-import static java.lang.String.*;
 import static net.gageot.test.Reflection.*;
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
-import javax.inject.Inject;
-import net.gageot.test.*;
+import net.gageot.test.GuiceModule;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
-import org.stringtemplate.v4.ST;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 import com.google.inject.*;
 
@@ -61,45 +55,6 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 	public Object controller(String action) {
 		return injector.getInstance(Key.get(Object.class, named(action)));
-	}
-
-	public final static class IndexController {
-		private final Scores scores;
-
-		@Inject
-		public IndexController(Scores scores) {
-			this.scores = scores;
-		}
-
-		public void render(Response resp) throws IOException {
-			String html = Files.toString(new File("index.html"), UTF_8);
-			ST template = new ST(html, '$', '$');
-			template.add("scoreLeft", scores.get(1));
-			template.add("scoreRight", scores.get(2));
-			resp.getPrintStream().append(template.render());
-		}
-	}
-
-	public final static class VoteController {
-		private final Scores scores;
-
-		@Inject
-		public VoteController(Scores scores) {
-			this.scores = scores;
-		}
-
-		public void render(Response resp, String kittenId) {
-			scores.win(Integer.parseInt(kittenId));
-
-			resp.add("Location", "/");
-			resp.setCode(307);
-		}
-	}
-
-	public final static class KittenController {
-		public void render(Response resp, String kittenId) throws IOException {
-			resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
-		}
 	}
 
 	public static void main(String[] args) {
