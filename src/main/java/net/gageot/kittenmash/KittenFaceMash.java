@@ -5,13 +5,14 @@ import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.*;
 import static com.google.common.io.Files.*;
 import static com.google.inject.Guice.*;
+import static com.google.inject.name.Names.*;
 import static java.lang.String.*;
 import static net.gageot.test.Reflection.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.List;
 import javax.inject.Inject;
-import net.gageot.test.Scores;
+import net.gageot.test.*;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
@@ -19,7 +20,7 @@ import org.stringtemplate.v4.ST;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
-import com.google.inject.Injector;
+import com.google.inject.*;
 
 public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
@@ -28,27 +29,23 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 	public KittenFaceMash(int port) {
 		this.port = port;
-		injector = createInjector();
+		injector = createInjector(new GuiceModule() {
+			@Override
+			protected void configure() {
+				bind(Object.class, named("index")).to(IndexController.class);
+				bind(Object.class, named("kitten")).to(KittenController.class);
+				bind(Object.class, named("vote")).to(VoteController.class);
+			}
+		});
 	}
 
 	@Override
 	public void handle(Request req, Response resp) {
-		List<String> segments = newArrayList(req.getPath().getSegments());
-		String action = getFirst(segments, "index");
-
 		try {
-			List<Object> arguments = ImmutableList.builder().add(resp).addAll(skip(segments, 1)).build();
+			List<String> path = newArrayList(req.getPath().getSegments());
+			String action = getFirst(path, "index");
 
-			Object controller;
-			if ("kitten".equals(action)) {
-				controller = injector.getInstance(KittenController.class);
-			} else if ("vote".equals(action)) {
-				controller = injector.getInstance(VoteController.class);
-			} else {
-				controller = injector.getInstance(IndexController.class);
-			}
-
-			invoke(controller, "render", arguments);
+			invoke(controller(action), "render", arguments(resp, path));
 		} finally {
 			try {
 				resp.close();
@@ -56,6 +53,14 @@ public class KittenFaceMash extends AbstractService implements Container {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public List<Object> arguments(Response resp, List<String> segments) {
+		return ImmutableList.builder().add(resp).addAll(skip(segments, 1)).build();
+	}
+
+	public Object controller(String action) {
+		return injector.getInstance(Key.get(Object.class, named(action)));
 	}
 
 	public final static class IndexController {
