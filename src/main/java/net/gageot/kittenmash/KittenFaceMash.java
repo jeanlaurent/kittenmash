@@ -5,8 +5,9 @@ import java.net.InetSocketAddress;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+import com.google.common.util.concurrent.AbstractService;
 
-public class KittenFaceMash implements Container {
+public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
 	private final int port;
 
@@ -23,12 +24,28 @@ public class KittenFaceMash implements Container {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		new KittenFaceMash(8080).run();
+	public static void main(String[] args) {
+		new KittenFaceMash(8080).stopAndWait();
 	}
 
-	public void run() throws IOException {
-		socketConnection = new SocketConnection(this);
-		socketConnection.connect(new InetSocketAddress(port));
+	@Override
+	protected void doStart() {
+		try {
+			socketConnection = new SocketConnection(this);
+			socketConnection.connect(new InetSocketAddress(port));
+			notifyStarted();
+		} catch (IOException e) {
+			notifyFailed(e);
+		}
+	}
+
+	@Override
+	protected void doStop() {
+		try {
+			socketConnection.close();
+			notifyStopped();
+		} catch (IOException e) {
+			notifyFailed(e);
+		}
 	}
 }
