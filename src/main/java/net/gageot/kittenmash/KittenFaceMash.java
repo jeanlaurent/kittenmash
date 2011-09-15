@@ -1,6 +1,9 @@
 package net.gageot.kittenmash;
 
+import static com.google.common.base.Charsets.*;
 import static com.google.common.collect.Iterables.*;
+import static com.google.common.collect.Lists.*;
+import static com.google.common.io.Files.*;
 import static java.lang.String.*;
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -8,7 +11,6 @@ import java.util.List;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractService;
 
@@ -22,15 +24,15 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 	@Override
 	public void handle(Request req, Response resp) {
-		List<String> path = Lists.newArrayList(req.getPath().getSegments());
+		List<String> path = newArrayList(req.getPath().getSegments());
 		String action = getFirst(path, "index");
 
 		try {
 			if ("kitten".equals(action)) {
 				String kittenId = path.get(1);
-				resp.getOutputStream().write(Files.toByteArray(new File(format("kitten/%s.jpg", kittenId))));
+				resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
 			} else {
-				resp.getPrintStream().append("hello world");
+				resp.getPrintStream().append(Files.toString(new File("index.html"), UTF_8));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
