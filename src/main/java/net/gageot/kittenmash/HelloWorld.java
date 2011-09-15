@@ -7,10 +7,6 @@ import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
 
 public class HelloWorld {
-	public String sayHello() {
-		return "hello world";
-	}
-
 	public static void main(String[] args) throws Exception {
 		new SocketConnection(new Container() {
 			@Override
