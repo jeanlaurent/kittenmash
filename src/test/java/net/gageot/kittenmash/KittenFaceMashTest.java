@@ -6,16 +6,16 @@ import org.junit.Test;
 public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 	@Test
 	public void canShowKitten() throws Exception {
-		beginAt("/kitten/01");
+		beginAt("/kitten/1");
 
-		assertDownloadedFileEquals("kitten/01.jpg");
+		assertDownloadedFileEquals("kitten/1.jpg");
 	}
 
 	@Test
 	public void canAnotherKitten() throws Exception {
-		beginAt("/kitten/02");
+		beginAt("/kitten/2");
 
-		assertDownloadedFileEquals("kitten/02.jpg");
+		assertDownloadedFileEquals("kitten/2.jpg");
 	}
 
 	@Test

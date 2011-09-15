@@ -8,6 +8,7 @@ import static net.gageot.test.Reflection.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
+import net.gageot.test.GuiceModule;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
@@ -22,12 +23,12 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 	public KittenFaceMash(int port) {
 		this.port = port;
-		injector = createInjector(new AbstractModule() {
+		injector = createInjector(new GuiceModule() {
 			@Override
 			protected void configure() {
-				bind(Key.get(Object.class, named("index"))).to(IndexController.class);
-				bind(Key.get(Object.class, named("kitten"))).to(KittenController.class);
-				bind(Key.get(Object.class, named("vote"))).to(VoteController.class);
+				bind(Object.class, named("index")).to(IndexController.class);
+				bind(Object.class, named("kitten")).to(KittenController.class);
+				bind(Object.class, named("vote")).to(VoteController.class);
 			}
 		});
 	}
@@ -48,7 +49,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 		}
 	}
 
-	public ImmutableList<Object> arguments(Response resp, List<String> path) {
+	public List<Object> arguments(Response resp, List<String> path) {
 		return ImmutableList.builder().add(resp).addAll(skip(path, 1)).build();
 	}
 
