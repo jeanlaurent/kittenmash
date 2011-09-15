@@ -7,11 +7,11 @@ import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
 import com.google.common.util.concurrent.AbstractService;
 
-public class HelloWorld extends AbstractService implements Container {
+public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
 	private final int port;
 
-	public HelloWorld(int port) {
+	public KittenFaceMash(int port) {
 		this.port = port;
 	}
 
@@ -25,7 +25,7 @@ public class HelloWorld extends AbstractService implements Container {
 	}
 
 	public static void main(String[] args) {
-		new HelloWorld(8080).startAndWait();
+		new KittenFaceMash(8080).startAndWait();
 	}
 
 	@Override

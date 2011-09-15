@@ -3,7 +3,7 @@ package net.gageot.test;
 import static ch.qos.logback.classic.Level.*;
 import java.lang.reflect.ParameterizedType;
 import java.util.Random;
-import net.gageot.kittenmash.HelloWorld;
+import net.gageot.kittenmash.KittenFaceMash;
 import net.sourceforge.jwebunit.junit.WebTester;
 import org.junit.*;
 import org.slf4j.LoggerFactory;
@@ -58,5 +58,5 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 		}
 	}
 
-	static final Class<?> hackUntilInfinitestIsFixed = HelloWorld.class;
+	static final Class<?> hackUntilInfinitestIsFixed = KittenFaceMash.class;
 }
