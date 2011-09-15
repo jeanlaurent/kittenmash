@@ -2,6 +2,7 @@ package net.gageot.test;
 
 import static ch.qos.logback.classic.Level.*;
 import java.lang.reflect.ParameterizedType;
+import java.net.*;
 import java.util.Random;
 import net.gageot.kittenmash.KittenFaceMash;
 import net.sourceforge.jwebunit.junit.WebTester;
@@ -56,6 +57,10 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 		synchronized (RANDOM) {
 			return DEFAULT_PORT + RANDOM.nextInt(1000);
 		}
+	}
+
+	public void assertDownloadedFileEquals(String file) throws MalformedURLException {
+		assertDownloadedFileEquals(new URL("file:" + file));
 	}
 
 	static final Class<?> hackUntilInfinitestIsFixed = KittenFaceMash.class;
