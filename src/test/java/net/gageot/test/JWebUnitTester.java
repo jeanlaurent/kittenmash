@@ -4,7 +4,7 @@ import static ch.qos.logback.classic.Level.*;
 import java.lang.reflect.ParameterizedType;
 import java.net.*;
 import java.util.Random;
-import net.gageot.kittenmash.KittenFaceMash;
+import net.gageot.kittenmash.Kittens;
 import net.sourceforge.jwebunit.junit.WebTester;
 import org.junit.*;
 import org.slf4j.LoggerFactory;
@@ -63,5 +63,5 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 		assertDownloadedFileEquals(new URL("file:" + file));
 	}
 
-	static final Class<?> hackUntilInfinitestIsFixed = KittenFaceMash.class;
+	static final Class<?> hackUntilInfinitestIsFixed = Kittens.class;
 }
