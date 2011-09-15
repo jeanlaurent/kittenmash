@@ -47,7 +47,7 @@ public class KittenFaceMash extends AbstractService implements Container {
 	}
 
 	public static void main(String[] args) {
-		new KittenFaceMash(8080).stopAndWait();
+		new KittenFaceMash(8080).startAndWait();
 	}
 
 	@Override
