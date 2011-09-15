@@ -18,4 +18,11 @@ public class KittenFaceMashTest extends JWebUnitTester<KittenFaceMash> {
 
 		assertDownloadedFileEquals("kitten/1.jpg");
 	}
+
+	@Test
+	public void canShowAnotherKitten() throws MalformedURLException {
+		beginAt("kitten/2");
+
+		assertDownloadedFileEquals("kitten/2.jpg");
+	}
 }
