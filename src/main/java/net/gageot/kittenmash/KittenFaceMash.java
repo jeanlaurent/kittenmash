@@ -1,14 +1,14 @@
 package net.gageot.kittenmash;
 
 import static com.google.common.collect.Iterables.*;
-import static com.google.common.collect.Lists.*;
 import static com.google.inject.Guice.*;
 import static com.google.inject.name.Names.*;
-import static net.gageot.test.Reflection.*;
+import static java.util.Arrays.*;
+import static net.gageot.kittenmash.util.Reflection.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
-import net.gageot.test.GuiceModule;
+import net.gageot.kittenmash.util.GuiceModule;
 import org.simpleframework.http.*;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
@@ -35,10 +35,10 @@ public class KittenFaceMash extends AbstractService implements Container {
 
 	@Override
 	public void handle(Request req, Response resp) {
-		try {
-			List<String> path = newArrayList(req.getPath().getSegments());
-			String action = getFirst(path, "index");
+		List<String> path = asList(req.getPath().getSegments());
+		String action = getFirst(path, "index");
 
+		try {
 			invoke(controller(action), "render", arguments(resp, path));
 		} finally {
 			try {

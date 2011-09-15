@@ -1,10 +1,10 @@
 package net.gageot.kittenmash;
 
 import javax.inject.Inject;
-import net.gageot.test.Elo;
+import net.gageot.kittenmash.util.Elo;
 import org.simpleframework.http.Response;
 
-public final class VoteController {
+public class VoteController {
 	private final Elo scores;
 
 	@Inject
@@ -12,8 +12,8 @@ public final class VoteController {
 		this.scores = scores;
 	}
 
-	public void render(Response resp, String winner, String loser) {
-		scores.vote(Integer.parseInt(winner), Integer.parseInt(loser));
+	public void render(Response resp, int winner, int loser) {
+		scores.vote(winner, loser);
 
 		resp.add("Location", "/");
 		resp.setCode(307);

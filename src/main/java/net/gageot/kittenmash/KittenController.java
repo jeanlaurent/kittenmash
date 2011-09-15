@@ -5,8 +5,8 @@ import static java.lang.String.*;
 import java.io.*;
 import org.simpleframework.http.Response;
 
-public final class KittenController {
-	public void render(Response resp, String kittenId) throws IOException {
-		resp.getOutputStream().write(toByteArray(new File(format("kitten/%s.jpg", kittenId))));
+public class KittenController {
+	public void render(Response resp, int kittenId) throws IOException {
+		resp.getOutputStream().write(toByteArray(new File(format("kitten/%d.jpg", kittenId))));
 	}
 }

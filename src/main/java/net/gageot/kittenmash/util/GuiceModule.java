@@ -1,4 +1,4 @@
-package net.gageot.test;
+package net.gageot.kittenmash.util;
 
 import com.google.inject.*;
 import com.google.inject.binder.LinkedBindingBuilder;

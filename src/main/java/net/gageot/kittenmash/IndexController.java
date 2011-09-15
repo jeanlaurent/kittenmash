@@ -1,15 +1,14 @@
 package net.gageot.kittenmash;
 
-import static com.google.common.base.Charsets.*;
+import static org.apache.commons.io.FileUtils.*;
 import java.io.*;
 import javax.inject.Inject;
-import net.gageot.test.Elo;
+import net.gageot.kittenmash.util.Elo;
 import org.apache.commons.lang.math.RandomUtils;
 import org.simpleframework.http.Response;
 import org.stringtemplate.v4.ST;
-import com.google.common.io.Files;
 
-public final class IndexController {
+public class IndexController {
 	private final Elo scores;
 
 	@Inject
@@ -18,18 +17,20 @@ public final class IndexController {
 	}
 
 	public void render(Response resp) throws IOException {
-		int kittenLeft = RandomUtils.nextInt(10);
-		int kittenRight;
+		int left = RandomUtils.nextInt(10);
+		int right;
 		do {
-			kittenRight = RandomUtils.nextInt(10);
-		} while (kittenLeft == kittenRight);
+			right = RandomUtils.nextInt(10);
+		} while (left == right);
 
-		String html = Files.toString(new File("index.html"), UTF_8);
-		ST template = new ST(html, '$', '$');
-		template.add("kittenLeft", kittenLeft);
-		template.add("kittenRight", kittenRight);
-		template.add("scoreLeft", scores.get(kittenLeft));
-		template.add("scoreRight", scores.get(kittenRight));
+		String html = readFileToString(new File("index.html"));
+
+		ST template = new ST(html, '$', '$') //
+				.add("left", left) //
+				.add("right", right) //
+				.add("scoreLeft", scores.get(left)) //
+				.add("scoreRight", scores.get(right));
+
 		resp.getPrintStream().append(template.render());
 	}
 }
