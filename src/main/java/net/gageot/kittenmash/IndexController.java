@@ -1,12 +1,13 @@
 package net.gageot.kittenmash;
 
-import static org.apache.commons.io.FileUtils.*;
+import static com.google.common.base.Charsets.*;
 import java.io.*;
 import javax.inject.Inject;
 import net.gageot.kittenmash.util.Elo;
 import org.apache.commons.lang.math.RandomUtils;
 import org.simpleframework.http.Response;
 import org.stringtemplate.v4.ST;
+import com.google.common.io.Files;
 
 public class IndexController {
 	private final Elo scores;
@@ -23,7 +24,7 @@ public class IndexController {
 			right = RandomUtils.nextInt(10);
 		} while (left == right);
 
-		String html = readFileToString(new File("index.html"));
+		String html = Files.toString(new File("index.html"), UTF_8);
 
 		ST template = new ST(html, '$', '$') //
 				.add("left", left) //
