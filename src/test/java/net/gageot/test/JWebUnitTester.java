@@ -9,6 +9,7 @@ import net.sourceforge.jwebunit.junit.WebTester;
 import org.junit.*;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
+import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.Service;
 
 public abstract class JWebUnitTester<T extends Service> extends WebTester {
@@ -59,8 +60,12 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 		}
 	}
 
-	public void assertDownloadedFileEquals(String file) throws MalformedURLException {
-		assertDownloadedFileEquals(new URL("file:" + file));
+	public void assertDownloadedFileEquals(String file) {
+		try {
+			assertDownloadedFileEquals(new URL("file:" + file));
+		} catch (MalformedURLException e) {
+			throw Throwables.propagate(e);
+		}
 	}
 
 	static final Class<?> hackUntilInfinitestIsFixed = Kittens.class;
