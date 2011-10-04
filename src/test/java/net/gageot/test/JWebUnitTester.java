@@ -28,11 +28,11 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 	@Before
 	@SuppressWarnings("unchecked")
 	public void startService() {
+		ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+		Class<T> serverClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+
 		for (int i = 0; i < TRY_COUNT; i++) {
 			try {
-				ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-				Class<T> serverClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
-
 				port = getRandomPort();
 
 				server = serverClass.getConstructor(int.class).newInstance(port);
@@ -45,7 +45,6 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 			}
 		}
 		throw new IllegalStateException("Unable to start server");
-
 	}
 
 	@After
