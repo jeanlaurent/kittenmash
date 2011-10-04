@@ -5,9 +5,9 @@ import org.junit.Test;
 
 public class KittensTest {
 	@Test
-	public void canSayHello() {
+	public void canShowKittens() {
 		Kittens kittens = new Kittens();
 
-		assertThat(kittens.sayHello()).isEqualTo("hello kittens");
+		assertThat(kittens.show()).isEqualTo("Kitten FaceMash");
 	}
 }

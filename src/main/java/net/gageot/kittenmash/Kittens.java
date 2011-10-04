@@ -1,7 +1,7 @@
 package net.gageot.kittenmash;
 
 public class Kittens {
-	public String sayHello() {
+	public String show() {
 		return "";
 	}
 }
