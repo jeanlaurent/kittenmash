@@ -40,7 +40,7 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 				setBaseUrl("http://localhost:" + port);
 				return;
 			} catch (Exception e) {
-				System.err.println("Unable to bind server: " + e.getMessage());
+				System.err.println("Unable to bind server: " + e);
 			}
 		}
 		throw new IllegalStateException("Unable to start server");
