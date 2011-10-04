@@ -1,6 +1,7 @@
 package net.gageot.test;
 
 import static ch.qos.logback.classic.Level.*;
+import static org.apache.commons.lang.StringUtils.*;
 import java.lang.reflect.ParameterizedType;
 import java.net.*;
 import java.util.Random;
@@ -66,6 +67,11 @@ public abstract class JWebUnitTester<T extends Service> extends WebTester {
 		} catch (MalformedURLException e) {
 			throw Throwables.propagate(e);
 		}
+	}
+
+	@Override
+	public void setBaseUrl(String url) {
+		super.setBaseUrl(removeEnd(url, "/") + "/");
 	}
 
 	static final Class<?> hackUntilInfinitestIsFixed = Kittens.class;
