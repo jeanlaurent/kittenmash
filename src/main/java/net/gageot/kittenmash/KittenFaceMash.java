@@ -1,20 +1,26 @@
 package net.gageot.kittenmash;
 
 import static com.google.common.collect.Iterables.*;
-import static com.google.inject.Guice.*;
-import static com.google.inject.name.Names.*;
-import static java.util.Arrays.*;
-import static net.gageot.kittenmash.util.Reflection.*;
+import static com.google.inject.Guice.createInjector;
+import static com.google.inject.name.Names.named;
+import static java.util.Arrays.asList;
+import static net.gageot.kittenmash.util.Reflection.invoke;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
+
 import net.gageot.kittenmash.util.GuiceModule;
-import org.simpleframework.http.*;
+
+import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.SocketConnection;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractService;
-import com.google.inject.*;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 
 public class KittenFaceMash extends AbstractService implements Container {
 	private SocketConnection socketConnection;
@@ -58,8 +64,16 @@ public class KittenFaceMash extends AbstractService implements Container {
 	}
 
 	public static void main(String[] args) {
-		new KittenFaceMash(8080).startAndWait();
-	}
+    new KittenFaceMash(findAPort()).startAndWait();
+  }
+
+  private static int findAPort() {
+    String systemPort = System.getenv("PORT");
+    if (systemPort != null) {
+      return Integer.valueOf(systemPort);
+    }
+    return 8080;
+  }
 
 	@Override
 	protected void doStart() {
